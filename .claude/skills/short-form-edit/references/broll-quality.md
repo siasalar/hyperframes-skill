@@ -63,8 +63,9 @@ conflicts with an explicit user instruction, follow the user and note it.
 
 Before writing the storyboard, render 2 still style frames from real
 HyperFrames compositions at the delivery resolution: one speaker-plus-graphic
-layout and one full-screen graphic, using the brief's palette and real content
-from this video. Show them to the user and wait for approval of the look. Build
+layout and one full-screen graphic, using real content from this video. When a
+reference video is supplied, build them from its measured `Reference spec`
+(layout, framing, card size, palette, type) unless the brief says otherwise. Show them to the user and wait for approval of the look. Build
 every scene in that approved style. If the user rejects the look, revise the
 frames, not the storyboard.
 

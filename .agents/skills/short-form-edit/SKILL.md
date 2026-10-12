@@ -46,6 +46,9 @@ this test. Treat the answer as editorial judgment until audience data exists.
    and explicit limits. Do not imply you heard audio based on waveform analysis.
    Read [reference-analysis.md](references/reference-analysis.md) for the reusable
    worksheet and analysis questions. Borrow editorial mechanisms, not branded copy.
+   Measure its look into the `Reference spec` (layout modes, speaker framing, card
+   size, transitions, captions, palette, motion) so the user never has to describe
+   the reference; it becomes the default look unless the brief overrides it.
 4. Before locking the concept, inspect the supplied footage, brand assets, and
    relevant source demos. Save an asset shortlist with exact usable intervals,
    visible action, consequence, provenance, and a possible story role. Let a

@@ -14,6 +14,10 @@ canvas renderer, even if a prompt names one.
 
 1. Inspect duration, streams, and source resolution with ffprobe. Copy the source
    into the project's assets or reference an explicitly provided local path.
+   When a reference video is supplied, analyze it with
+   `../short-form-edit/references/reference-analysis.md`, including the measured
+   `Reference spec` (layout modes, framing, card size, transitions, captions,
+   palette, motion), and use it as the default look unless the brief overrides it.
 2. Choose the transcription path with "Choose a transcription path" in
    `docs/TOOLS-AND-API-KEYS.md`: reuse a matching word transcript, else ElevenLabs
    Scribe (`node scripts/transcribe-elevenlabs.mjs <source> --language <code>`)
