@@ -17,8 +17,13 @@ Look at the tools available in this session (do not print any secret):
 | Other connectors | any other media-generation or transcription connector | As the user chooses |
 
 Also check whether `.env` contains a non-empty `ELEVENLABS_API_KEY`, `KIE_API_KEY`,
-or `OPENAI_API_KEY` (report only "set" or "empty"), and whether local
-faster-whisper can run (`python3 scripts/transcribe-faster-whisper.py --check`).
+or `OPENAI_API_KEY` (report only "set" or "empty").
+
+**Computer check, with permission.** Before running anything on the user's
+hardware, ask once: "May I check your computer's memory and graphics card to see
+whether it can transcribe locally? This only reads system info." If they agree,
+run `python3 scripts/transcribe-faster-whisper.py --check` (no install, read-only).
+If they decline, treat local processing as unavailable and offer only online options.
 
 ## 2. Report in one short message
 
@@ -28,16 +33,39 @@ Use the user's language. Example:
 > - Higgsfield: connected (Plus, 1,200 credits). Used for generated images and video.
 > - ElevenLabs: connected. Used for transcription and sound effects.
 > - Kie.ai: not set up. Optional.
-> - Local transcription: this computer can run it for free.
+> - This computer: 8 GB RAM, no graphics card.
 >
-> Nothing else is needed. If you want another service, connect it in
-> Claude → Settings → Connectors and start a new session.
+> For transcription you can choose:
+> 1. Online with ElevenLabs (connected): fastest and most accurate for Persian;
+>    uses your ElevenLabs plan.
+> 2. On this computer: free, but it will keep the processor busy and take longer
+>    (roughly several minutes per minute of video on this machine).
+>
+> Which one do you want?
+
+## 3. Let the user choose where heavy work runs
+
+Never pick silently between paid online processing and the user's own hardware.
+Offer the options that actually exist, each with its trade-off, recommend one,
+and wait for the choice; record it in the project's plan and reuse it.
+
+- **Transcription:** reuse an existing matching transcript without asking.
+  Otherwise offer the connected or keyed online service (cost: their plan or
+  credits) and local faster-whisper (free; uses CPU or GPU; slow on weak
+  laptops). Recommend online when `--check` reports under 8 GB RAM and no NVIDIA
+  GPU, or when the language is not English and the machine is weak.
+- **Local device:** use the graphics card only when `--check` found an NVIDIA GPU
+  and the user agreed to local processing; otherwise run on the CPU
+  (`--device cpu`). Never install GPU drivers or CUDA.
+- **Rendering** always runs locally in Chrome and works without a graphics card.
+  On a weak machine, render drafts at `--quality draft` and say the final render
+  may take a while.
 
 For anything missing, say what it would add and that it is optional. Only when a
 user has no connector for a service and explicitly prefers an API key, open
 `.env` for them and say which line to fill. Do not ask them to paste keys into chat.
 
-## 3. Use the connector, verify the output
+## 4. Use the connector, verify the output
 
 - **Transcription through a connector.** Call its speech-to-text tool with the
   spoken language set (for example `fa`). Save the raw response in the project.

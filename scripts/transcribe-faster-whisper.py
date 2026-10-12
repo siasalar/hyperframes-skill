@@ -136,7 +136,14 @@ def transcribe(args):
     out = args.output or os.path.splitext(src)[0] + ".json"
 
     print(f"Model {model_name} on {device} ({compute}); first run downloads the model.", file=sys.stderr)
-    model = WhisperModel(model_name, device=device, compute_type=compute)
+    try:
+        model = WhisperModel(model_name, device=device, compute_type=compute)
+    except Exception as exc:  # missing CUDA/cuDNN libraries and similar
+        if device != "cuda":
+            raise
+        print(f"GPU unavailable ({exc}); falling back to CPU.", file=sys.stderr)
+        device, compute = "cpu", "int8"
+        model = WhisperModel(model_name, device=device, compute_type=compute)
     segments, info = model.transcribe(
         src,
         language=None if args.language == "auto" else args.language,

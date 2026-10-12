@@ -49,7 +49,9 @@ for current model options and usage details.
 
 ## Choose a transcription path
 
-The assistant picks the first option that applies and tells you which one:
+The assistant reuses an existing transcript automatically. Otherwise it asks
+permission to check your computer, then lets you choose between the options
+below with their cost and speed (see [CONNECTED-SERVICES.md](CONNECTED-SERVICES.md)):
 
 1. **Reuse** a word-level transcript that matches this exact recording.
 2. **ElevenLabs through its connector**, when connected and it returns

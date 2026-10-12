@@ -23,7 +23,9 @@ canvas renderer, even if a prompt names one.
    through its connector (`docs/CONNECTED-SERVICES.md`) or its API key
    (`node scripts/transcribe-elevenlabs.mjs <source> --language <code>`), else local faster-whisper sized to the machine
    (`python3 scripts/transcribe-faster-whisper.py --check`). Set the spoken
-   language explicitly (`fa` for Persian). Ask before installing anything, and
+   language explicitly (`fa` for Persian). Ask before checking the computer or
+   installing anything; let the user choose online (paid) or local (free, uses
+   their CPU/GPU) per `docs/CONNECTED-SERVICES.md`, and
    explain uploads and costs before any service call not yet authorized.
    If the edit may use generated images, video, music, or voice, run the
    generation-account check in `docs/GENERATION-ACCOUNTS.md` now: offer the

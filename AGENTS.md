@@ -74,7 +74,9 @@ Before choosing a transcription, asset-generation, or voiceover service, read
 ElevenLabs Scribe is the default; honor requests for OpenAI Whisper, local
 Whisper, or another provider. Normalize verified word timestamps for the cutting
 tools. Pick transcription with "Choose a transcription path" in that guide:
-reuse, ElevenLabs when keyed, else local faster-whisper sized by its `--check`;
+reuse an existing transcript; otherwise ask permission to check the computer,
+then let the user choose online (connector or key, paid) or local faster-whisper
+(free, uses their CPU/GPU); never pick silently, never install GPU drivers;
 always pass the spoken language, and ask before installing. Before planning any
 generated image, video, music, or voice, follow `docs/GENERATION-ACCOUNTS.md`:
 if a Higgsfield connector is connected, ask to use it; if declined or missing,
