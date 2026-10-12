@@ -82,6 +82,45 @@ or feel the rhythm stumble:
 - Let a graphic or the music carry across the join so motion and sound continue
   through it, and check the join frame by frame and by ear in the draft.
 
+## Invent signature moments yourself
+
+The user should not have to script creative ideas. Read the transcript, infer
+its tone (explainer, story, opinion, tutorial) and its core idea, then invent
+visuals that grow out of what is said.
+
+- For the hook and each key idea, write three different visual concepts in the
+  storyboard and pick the strongest; say why in one line. Reject any concept that
+  could illustrate a different video.
+- Every reel gets at least one **signature transition** that connects generated
+  footage, graphics, and the real speaker into one continuous move.
+- Build concepts from the content's own objects and actions. Example: a video
+  about recording each video four times could open on a real-looking camera,
+  push into its viewfinder where four takes play side by side, and land on the
+  speaker as the "best take" fills the screen.
+
+Technique vocabulary (pick by meaning, never as a checklist):
+
+- **Land on the speaker (end frame).** Extract the speaker frame at the cut point
+  (`ffmpeg -ss <t> -i cut.mp4 -frames:v 1 land.png`), upload it, and generate
+  with it as the **end frame** (Higgsfield `kling3_0` or `seedance_2_0` with
+  `medias` role `end_image`; Kie Kling image-to-video with a tail image when
+  supported). The generated move finishes exactly on the real shot; cut or blend
+  2-4 frames into the real footage at that frame.
+- **Launch from the speaker (start frame).** The same trick reversed: the real
+  frame is `start_image` and the shot transforms out into the next idea.
+- **Zoom through a frame.** A screen, viewfinder, window, or phone inside a
+  generated or HTML shot holds the speaker video (masked and perspective-fit in
+  HyperFrames); the camera pushes in until it fills the frame.
+- **Match cut** on shape, motion direction, or color between generated footage,
+  graphics, and the speaker.
+- **Object carry-over:** an object from a generated shot becomes the graphic in
+  the next scene, or the speaker card becomes an object in the generated scene.
+
+Rules: generated frames may show the speaker only with that user's consent, only
+briefly, and only as a transition into or out of their real footage; never put
+words in their mouth. Conform generated 24 fps clips to the edit's frame rate and
+check the landing frame side by side with the real frame before approving.
+
 ## AI-generated footage
 
 - Use it for physical, real-world, or cinematic shots that HTML cannot produce.

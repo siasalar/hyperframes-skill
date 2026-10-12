@@ -168,6 +168,9 @@ a distinct opening-hook gate in the verification report.
 
 ### Build the visual world
 
+- Infer tone and genre from the transcript; the user does not have to state them.
+  Invent the signature moments yourself ("Invent signature moments yourself" in
+  [broll-quality.md](references/broll-quality.md)).
 - Choose a visual direction from the subject, audience, source material, and
   brand brief. Record why it suits this story. Documentary footage, visual comedy,
   product demonstrations, and designed objects are options, not required quotas.

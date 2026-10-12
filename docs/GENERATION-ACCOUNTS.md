@@ -54,6 +54,11 @@ user changes their mind or the account stops working.
   batch. Reuse finished jobs; never resubmit after a timeout until the first
   job's outcome is known.
 
+For transitions that land on or launch from the real speaker, upload a frame
+extracted from the edited video (`media_upload`) and pass it as `end_image` or
+`start_image` to a model that accepts it (`kling3_0`, `seedance_2_0`); check the
+model's roles with `models_explore` first.
+
 Model availability differs between services (for example, a model may exist on
 one and not the other). If the approved account lacks the model a shot needs,
 propose the closest model on that account first, then ask before using another
