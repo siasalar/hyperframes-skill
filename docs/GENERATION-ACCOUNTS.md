@@ -54,10 +54,11 @@ user changes their mind or the account stops working.
   batch. Reuse finished jobs; never resubmit after a timeout until the first
   job's outcome is known.
 
-For transitions that land on or launch from the real speaker, upload a frame
-extracted from the edited video (`media_upload`) and pass it as `end_image` or
-`start_image` to a model that accepts it (`kling3_0`, `seedance_2_0`); check the
-model's roles with `models_explore` first.
+Never send a frame showing the speaker's face to a generation model. For
+transitions into or out of the real speaker, generate a shot that ends or starts
+on an empty screen or object (optionally fixed with `end_image` / `start_image`
+on `kling3_0` or `seedance_2_0`), then composite the real video into it in
+HyperFrames. Check a model's media roles with `models_explore` first.
 
 Model availability differs between services (for example, a model may exist on
 one and not the other). If the approved account lacks the model a shot needs,

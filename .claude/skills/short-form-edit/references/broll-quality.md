@@ -94,32 +94,37 @@ visuals that grow out of what is said.
 - Every reel gets at least one **signature transition** that connects generated
   footage, graphics, and the real speaker into one continuous move.
 - Build concepts from the content's own objects and actions. Example: a video
-  about recording each video four times could open on a real-looking camera,
-  push into its viewfinder where four takes play side by side, and land on the
-  speaker as the "best take" fills the screen.
+  about recording each video four times could open on a generated camera whose
+  viewfinder shows four real takes side by side (composited), then push in until
+  the real "best take" fills the screen.
+
+**The speaker's face is never generated.** Every frame that shows the speaker
+comes from their real recording. Generated footage shows only objects, places,
+and hands without the speaker's face; the real video is composited into it in
+HyperFrames. Never pass a frame containing the speaker's face to an image or
+video model as a start, end, or reference image.
 
 Technique vocabulary (pick by meaning, never as a checklist):
 
-- **Land on the speaker (end frame).** Extract the speaker frame at the cut point
-  (`ffmpeg -ss <t> -i cut.mp4 -frames:v 1 land.png`), upload it, and generate
-  with it as the **end frame** (Higgsfield `kling3_0` or `seedance_2_0` with
-  `medias` role `end_image`; Kie Kling image-to-video with a tail image when
-  supported). The generated move finishes exactly on the real shot; cut or blend
-  2-4 frames into the real footage at that frame.
-- **Launch from the speaker (start frame).** The same trick reversed: the real
-  frame is `start_image` and the shot transforms out into the next idea.
-- **Zoom through a frame.** A screen, viewfinder, window, or phone inside a
-  generated or HTML shot holds the speaker video (masked and perspective-fit in
-  HyperFrames); the camera pushes in until it fills the frame.
+- **Zoom through a frame into the real speaker.** Generate the shot ending on an
+  empty screen: a camera viewfinder, phone, monitor, or window showing plain black
+  or green. In HyperFrames, place the real speaker video inside that screen
+  (masked and perspective-fit), then push the camera in until the real footage
+  fills the frame. The landing is pure compositing, so the face is always real.
+- **Pull out of the real speaker.** The reverse: start full-frame on the real
+  footage, shrink it into a screen or object inside a generated shot, and let
+  the generated scene take over.
+- **End-frame and start-frame control without the face.** To make a generated
+  shot finish or begin on an exact composition, give the model a frame that
+  shows only the empty screen, object, or set (`end_image` / `start_image` on
+  `kling3_0` or `seedance_2_0`), never the speaker.
 - **Match cut** on shape, motion direction, or color between generated footage,
   graphics, and the speaker.
 - **Object carry-over:** an object from a generated shot becomes the graphic in
   the next scene, or the speaker card becomes an object in the generated scene.
 
-Rules: generated frames may show the speaker only with that user's consent, only
-briefly, and only as a transition into or out of their real footage; never put
-words in their mouth. Conform generated 24 fps clips to the edit's frame rate and
-check the landing frame side by side with the real frame before approving.
+Conform generated 24 fps clips to the edit's frame rate and check every
+transition frame by frame: the speaker's face must only ever be real footage.
 
 ## AI-generated footage
 
