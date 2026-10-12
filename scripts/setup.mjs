@@ -11,8 +11,9 @@ for (const [command, args] of [['node', ['--version']], ['ffmpeg', ['-version']]
   else console.log((result.stdout || result.stderr).split(/\r?\n/)[0]);
 }
 if (Number(process.versions.node.split('.')[0]) < 22) { console.error('Node 22+ required.'); missing = true; }
-if (!existsSync(join(root, '.env'))) { copyFileSync(join(root, '.env.example'), join(root, '.env')); console.log('Created local .env. Fill only the keys your chosen services need.'); }
+if (!existsSync(join(root, '.env'))) { copyFileSync(join(root, '.env.example'), join(root, '.env')); console.log('Created local .env (optional; leave it empty if you use connectors).'); }
 else console.log('Existing .env preserved.');
-console.log('Service setup and alternatives: docs/TOOLS-AND-API-KEYS.md');
+console.log('API keys are optional. Services connected through Claude connectors (Higgsfield, ElevenLabs) need no keys;');
+console.log('the assistant checks what is connected and reports it (docs/CONNECTED-SERVICES.md).');
 console.log('Next: npx hyperframes doctor (Chrome diagnostics), then npm run demo.');
 process.exitCode = missing ? 1 : 0;

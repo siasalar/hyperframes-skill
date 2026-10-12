@@ -33,8 +33,8 @@ this test. Treat the answer as editorial judgment until audience data exists.
 2. Probe the supplied source and reference: duration, dimensions, frame rate,
    audio, and existing transcript identity. Preserve originals. Choose the
    transcription path with "Choose a transcription path" in
-   `docs/TOOLS-AND-API-KEYS.md` (reuse, ElevenLabs Scribe, or local
-   faster-whisper sized to the machine with `--check`); set the spoken language
+   `docs/TOOLS-AND-API-KEYS.md` (reuse, ElevenLabs connector or API key, or
+   local faster-whisper sized to the machine with `--check`); set the spoken language
    explicitly, for example `fa` for Persian. Ask before installing anything.
    Never substitute an older take.
    **Two or more main recordings.** Transcribe each one separately. Place them as

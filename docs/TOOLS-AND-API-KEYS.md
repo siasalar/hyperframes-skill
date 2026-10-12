@@ -4,6 +4,11 @@ This kit uses **ElevenLabs Scribe for transcription** and **Kie.ai for generated
 and image assets** by default. These are preferred services, not requirements for every
 edit. Bring your own accounts and credits, and configure only what you use.
 
+**No programming needed.** If you connected Higgsfield or ElevenLabs as connectors
+in Claude (Settings → Connectors), you need no API keys: the assistant detects
+them and tells you what is connected. API keys in `.env` are only an alternative.
+See [Check connected services first](CONNECTED-SERVICES.md).
+
 For generated images, video, music, and voice the assistant first checks for a
 connected **Higgsfield** account and asks before using it; if you decline or have
 none, it offers Kie.ai or your other accounts. See
@@ -20,6 +25,7 @@ none, it offers Kie.ai or your other accounts. See
 | OpenAI Whisper API | Alternative cloud transcription | Your own OpenAI API key and API billing. Ask the assistant to configure the call and normalize its word timestamps. |
 | Local faster-whisper | Free offline transcription on your computer | Python plus `faster-whisper` (installed only with your approval). `scripts/transcribe-faster-whisper.py --check` picks a model that fits your RAM and GPU. |
 | Local Whisper or whisper.cpp | Alternative transcription on your computer | Separate runtime and model installation. No cloud transcription key; needs model downloads, disk space, and local compute. |
+| ElevenLabs connector | Transcription, voice, and sound effects without an API key | Your ElevenLabs account connected as a connector in Claude. Detected automatically. |
 | Higgsfield | Optional generated images, video, and music through its connector; offered first when connected | Your own Higgsfield plan or credits and the Higgsfield connector connected in your assistant. Asked before use. |
 | Kie.ai | Optional generated moving B-roll, images, and other supported assets | Your own account, key, and credits. Existing footage and supplied assets can be used instead. |
 | Your footage, logos, fonts, music, and sound effects | Building the actual edit | Supply assets you can use. The kit does not include a stock-media or music subscription. |
@@ -46,10 +52,12 @@ for current model options and usage details.
 The assistant picks the first option that applies and tells you which one:
 
 1. **Reuse** a word-level transcript that matches this exact recording.
-2. **ElevenLabs Scribe** when `ELEVENLABS_API_KEY` is set. Most accurate for
-   Persian and other non-English speech; a paid cloud upload.
+2. **ElevenLabs through its connector**, when connected and it returns
+   word-level times (see [CONNECTED-SERVICES.md](CONNECTED-SERVICES.md)).
+   Most accurate for Persian and other non-English speech; uses your ElevenLabs plan.
+3. **ElevenLabs Scribe API** when `ELEVENLABS_API_KEY` is set.
    `node scripts/transcribe-elevenlabs.mjs <video> --language fa`
-3. **Local faster-whisper**, free and offline after a one-time model download.
+4. **Local faster-whisper**, free and offline after a one-time model download.
    First check what the computer can run (no install needed):
    `python3 scripts/transcribe-faster-whisper.py --check`
 
@@ -63,7 +71,7 @@ The assistant picks the first option that applies and tells you which one:
    Installing needs your approval: `python3 -m pip install --user faster-whisper`.
    Then: `python3 scripts/transcribe-faster-whisper.py <video> --language fa`.
    Override with `--model large-v3` for maximum accuracy on a strong machine.
-4. **OpenAI Whisper API** when `OPENAI_API_KEY` is set (details below).
+5. **OpenAI Whisper API** when `OPENAI_API_KEY` is set (details below).
 
 Always pass the spoken language explicitly (`fa` for Persian, `en` for English);
 auto-detection can mislabel short or mixed-language clips. On a weak machine the

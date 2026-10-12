@@ -20,8 +20,8 @@ canvas renderer, even if a prompt names one.
    palette, motion), and use it as the default look unless the brief overrides it.
 2. Choose the transcription path with "Choose a transcription path" in
    `docs/TOOLS-AND-API-KEYS.md`: reuse a matching word transcript, else ElevenLabs
-   Scribe (`node scripts/transcribe-elevenlabs.mjs <source> --language <code>`)
-   when its key is set, else local faster-whisper sized to the machine
+   through its connector (`docs/CONNECTED-SERVICES.md`) or its API key
+   (`node scripts/transcribe-elevenlabs.mjs <source> --language <code>`), else local faster-whisper sized to the machine
    (`python3 scripts/transcribe-faster-whisper.py --check`). Set the spoken
    language explicitly (`fa` for Persian). Ask before installing anything, and
    explain uploads and costs before any service call not yet authorized.

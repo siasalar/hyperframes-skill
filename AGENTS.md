@@ -65,6 +65,10 @@ new personal footage. Never print secrets or copy private media into library exa
 
 ## Editing and timing
 
+After installing the kit and at the start of any edit, run the service check in
+`docs/CONNECTED-SERVICES.md`: detect connected connectors (Higgsfield, ElevenLabs)
+and set keys, then report one short status list. Never open with "add keys to
+.env"; users may only have connectors. Prefer a connector over an API key.
 Before choosing a transcription, asset-generation, or voiceover service, read
 `docs/TOOLS-AND-API-KEYS.md` and check the user's provider choice and local setup.
 ElevenLabs Scribe is the default; honor requests for OpenAI Whisper, local
