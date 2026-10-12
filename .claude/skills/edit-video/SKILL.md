@@ -46,6 +46,10 @@ canvas renderer, even if a prompt names one.
    Every inserted visual must meet `../short-form-edit/references/broll-quality.md`;
    render the two style frames it describes and get the look approved before the
    beat sheet is built out.
+   Then show the beat sheet as a visual storyboard
+   (`node scripts/storyboard-sheet.mjs storyboard.json --open`) and wait for the
+   user's approval before building any composition. A general "edit this video"
+   instruction does not approve the style frames or the storyboard.
 6. Read `MOTION_PHILOSOPHY.md`, `../hyperframes/SKILL.md`, and relevant GSAP
    references before authoring. Use `../style-library/SKILL.md` to select or
    adapt a card. Localize every asset used by the composition.
@@ -54,7 +58,8 @@ canvas renderer, even if a prompt names one.
 8. Render a draft, inspect encoded frames and transitions, and listen across cut
    boundaries. Check face framing, text legibility, black frames, and A/V sync.
    Resolve failures before the final render. Follow any review approvals already
-   provided; do not repeat approval requests for the same authorized action.
+   provided; do not repeat approval requests for the same authorized action
+   (the style-frame and storyboard gates always need their own approval).
 
 Deliver the final MP4 path, edit decisions, retimed transcript, composition,
 and `VERIFY.md` describing what was checked and any remaining limitations.

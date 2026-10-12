@@ -25,7 +25,8 @@ retain upstream provenance for excerpts. Detect duplicate scene IDs and overlapp
 intervals from files with the same hash, including renamed copies. Re-encoding can
 change hashes, so semantic scene identity and visual review remain necessary.
 
-Use contain framing by default. An intentional crop must keep the complete
+For B-roll footage, use contain framing by default (this does not apply to the
+speaker, whose masks and moves are covered in broll-quality.md). An intentional crop must keep the complete
 subject, visible action, and result inside a documented region throughout the
 selection. Check start, midpoint, endpoint, and action peaks independently in
 16:9 and 9:16. Do not enlarge a scene until essential context disappears or place

@@ -48,6 +48,40 @@ conflicts with an explicit user instruction, follow the user and note it.
    Persian, loaded from a local file in the project), set `dir="rtl"` for RTL text,
    and check that letters join correctly in the rendered frame.
 
+## The speaker is a design element
+
+"Do not change the speaker" means their voice, color, and light. It does not
+mean the footage must sit in a fixed rectangle. Treat the speaker video as the
+most important object in the visual world and design with it:
+
+- **Shapes:** circle, rounded card, pill, or a window inside a graphic (a phone
+  screen, a node in a diagram, a slot in a dashboard). Animate the mask itself:
+  full frame shrinking into a circle, a circle growing back to full frame.
+- **Travel:** the same speaker card moves between positions and sizes across
+  scenes instead of popping in and out, so the viewer always knows where they are.
+- **Rhythm:** punch-ins (about 1.08-1.15x) and position changes land on stressed
+  words, never on a random beat.
+- **Framing inside a mask:** eyes in the upper third of the shape, the full face
+  and chin inside it, and the mask edge never cutting through the mouth or eyes.
+  Check this on every frame of a move, not only at rest.
+- **Depth:** a soft shadow, a thin bright border, or a glow behind the card
+  separates the speaker from the graphics.
+
+Plan at least two speaker treatments per reel and record them in the storyboard.
+
+## Joins between recordings and takes
+
+Where two recordings or two separated takes meet, the viewer must not see a jump
+or feel the rhythm stumble:
+
+- Keep the speaker's natural pause at the join (the splice script sizes it from
+  their own sentence gaps); never butt two sentences together or leave dead air.
+- Hide the visual jump: land the join on a layout change (speaker to full-screen
+  graphic, full frame to circle, card moving) or a punch-in, so the two shots are
+  never shown in the same framing back to back.
+- Let a graphic or the music carry across the join so motion and sound continue
+  through it, and check the join frame by frame and by ear in the draft.
+
 ## AI-generated footage
 
 - Use it for physical, real-world, or cinematic shots that HTML cannot produce.

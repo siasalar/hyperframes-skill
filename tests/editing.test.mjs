@@ -65,7 +65,7 @@ test('beat validator accepts reordered attributes and enforces early and late li
 test('splicing two sources offsets the second transcript and reports joins', () => {
   const out = scratch();
   const plan = join(out, 'plan.json');
-  writeFileSync(plan, JSON.stringify({ output: 'combined.mp4', segments: [
+  writeFileSync(plan, JSON.stringify({ output: 'combined.mp4', snap: false, segments: [
     { label: 'intro', video: 'missing-a.mp4', transcript: fixture, start: 0, end: 1.0 },
     { label: 'insert', video: 'missing-b.mp4', transcript: fixture, start: 2.0, end: 4.0 },
   ] }));
@@ -77,4 +77,44 @@ test('splicing two sources offsets the second transcript and reports joins', () 
   assert.ok(doc.words.every((w, i) => w.end > w.start && (!i || w.start >= doc.words[i-1].start)));
   assert.ok(doc.words.every(w => w.end <= 3 + 1e-6));
   assert.match(readFileSync(join(out, 'combined.splice-review.md'), 'utf8'), /placed at 1 s/);
+});
+
+test('splice snapping keeps a natural pause at the join and never cuts a word', () => {
+  const out = scratch();
+  const plan = join(out, 'plan.json');
+  const words = JSON.parse(readFileSync(fixture)).words.filter(w => (w.type ? w.type === 'word' : true));
+  let mid = 1;
+  for (let i = 1; i < words.length; i++) if (words[i].start - words[i-1].end > words[mid].start - words[mid-1].end) mid = i;
+  const gap = words[mid].start - words[mid - 1].end;
+  const cut = (words[mid - 1].end + words[mid].start) / 2;
+  writeFileSync(plan, JSON.stringify({ segments: [
+    { label: 'a', video: 'x.mp4', transcript: fixture, start: 0, end: cut },
+    { label: 'b', video: 'x.mp4', transcript: fixture, start: cut },
+  ] }));
+  const result = run('scripts/splice-sources.mjs', [plan, '--out-dir', out]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.doesNotMatch(result.stderr, /cuts through the word/);
+  const doc = JSON.parse(readFileSync(join(out, 'combined.json')));
+  const j = doc.segments[1].offset;
+  const before = doc.words.filter(w => w.end <= j + 1e-6).at(-1);
+  const after = doc.words.find(w => w.start >= j - 1e-6);
+  const pause = after.start - before.end;
+  assert.ok(pause <= gap + 1e-6, `join pause ${pause} exceeds the real gap ${gap}`);
+  assert.ok(pause >= Math.min(gap, 0.25) - 1e-6 && pause <= 0.7 + 1e-6, `join pause ${pause} (gap ${gap})`);
+  assert.match(readFileSync(join(out, 'combined.splice-review.md'), 'utf8'), /Natural pause used at joins/);
+});
+
+test('storyboard sheet renders every scene with Persian labels', () => {
+  const out = scratch();
+  const sb = join(out, 'storyboard.json');
+  writeFileSync(sb, JSON.stringify({ title: 'ریلز آزمایشی', scenes: [
+    { id: 's01', start: 0, end: 2, layout: 'speaker', spoken: 'سلام' },
+    { id: 's02', start: 2, end: 5, layout: 'pip', spoken: 'این مرحله اول است', onScreen: 'نمودار' },
+  ] }));
+  const result = run('scripts/storyboard-sheet.mjs', [sb]);
+  assert.equal(result.status, 0, result.stderr);
+  const html = readFileSync(join(out, 'STORYBOARD.html'), 'utf8');
+  assert.match(html, /dir="rtl"/);
+  assert.equal((html.match(/class="card"/g) || []).length, 2);
+  assert.match(html, /روی صفحه/);
 });

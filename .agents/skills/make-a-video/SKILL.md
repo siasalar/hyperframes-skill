@@ -117,7 +117,7 @@ Otherwise continue:
 
 ### Storyboard
 
-Generate `<project-folder>/STORYBOARD.md` using the template in `references/storyboard-template.md`. Every beat gets:
+Generate `<project-folder>/STORYBOARD.md` using the template in `references/storyboard-template.md`, and also a visual `STORYBOARD.html` with `node scripts/storyboard-sheet.mjs storyboard.json --open`; show it and wait for approval before building. Every beat gets:
 
 ```
 Beat N — TITLE (start–end, duration) — Concept in one sentence

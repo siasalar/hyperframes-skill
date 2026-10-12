@@ -89,8 +89,10 @@ input or use an empty cuts list. Never mix original timestamps with edited foota
 Cutting is not altering the voice: never denoise, EQ, compress, normalize, or
 retime the speaker's audio, or regrade their footage, unless asked.
 
-Every inserted visual must meet `.claude/skills/short-form-edit/references/broll-quality.md`;
-approve two style frames before the storyboard.
+Every inserted visual must meet `.claude/skills/short-form-edit/references/broll-quality.md`.
+Always stop for approval of two style frames, then of a visual storyboard
+(`scripts/storyboard-sheet.mjs`), before building scenes; "make a reel" alone
+does not approve them.
 
 Load the relevant skills before changing HTML. Root compositions use a visible
 div with id, data-composition-id, data-start, duration, width, and height. Timed

@@ -22,8 +22,11 @@
 //   <stem>.json             combined transcript { text, audio_duration_secs, words, segments }
 //   <stem>.splice-review.md join points with the words around them, for user approval
 // Without --apply it prints the ffmpeg command; with --apply it renders the video.
+// Boundaries snap into the gap between words, keeping the speaker's own natural
+// pause (median sentence gap) at each join; set "snap": false to disable.
 // Video is scaled/padded to the first segment's size and frame rate. Audio is only
-// resampled to 48 kHz stereo for the join; no denoise, EQ, or loudness change.
+// resampled to 48 kHz stereo with a 15 ms fade at each join to prevent clicks;
+// no denoise, EQ, or loudness change.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve, dirname, join, basename, extname } from 'node:path';
@@ -53,21 +56,79 @@ const words = [];
 const segOut = [];
 let offset = 0;
 
+function loadWords(tPath) {
+  const t = JSON.parse(readFileSync(tPath, 'utf8'));
+  const list = (t.words || [])
+    .filter((w) => (w.type ? w.type === 'word' : true))
+    .map((w) => ({ text: String(w.text ?? w.word ?? '').trim(), start: Number(w.start), end: Number(w.end) }))
+    .filter((w) => w.text && Number.isFinite(w.start) && Number.isFinite(w.end));
+  return { list, duration: Number(t.audio_duration_secs) || (list.length ? list.at(-1).end : 0) };
+}
+
+// The speaker's own pause between phrases, used to size every join so the
+// rhythm does not stumble. Median of gaps between 0.25 and 1.5 s.
+const gaps = [];
+for (const seg of plan.segments) {
+  const tPath = resolve(planDir, seg.transcript || '');
+  if (!seg.transcript || !existsSync(tPath)) continue;
+  const { list } = loadWords(tPath);
+  for (let i = 1; i < list.length; i++) {
+    const g = list[i].start - list[i - 1].end;
+    if (g >= 0.25 && g <= 1.5) gaps.push(g);
+  }
+}
+gaps.sort((a, b) => a - b);
+const naturalPause = Math.min(0.7, Math.max(0.25, gaps.length ? gaps[Math.floor(gaps.length / 2)] : 0.4));
+const headPad = 0.4 * naturalPause;
+const tailPad = 0.6 * naturalPause;
+const snapAll = plan.snap !== false;
+
+function probe(file) {
+  const r = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height,r_frame_rate', '-of', 'json', file], { encoding: 'utf8' });
+  if (r.status !== 0) return null;
+  const s = JSON.parse(r.stdout).streams?.[0];
+  if (!s) return null;
+  const [n, d] = s.r_frame_rate.split('/').map(Number);
+  return { width: s.width, height: s.height, fps: d ? n / d : n };
+}
+
+const firstVideo = resolve(planDir, plan.segments[0].video || '');
+const target = existsSync(firstVideo) ? probe(firstVideo) : null;
+const FPS = target ? Math.round(target.fps * 1000) / 1000 : null;
+// Cut points sit on the output frame grid so every segment's video and audio
+// have exactly the same length; otherwise concat pads audio and drifts A/V.
+const onGrid = (t) => (FPS ? Math.round(t * FPS) / FPS : t);
+const FADE = 0.015;
+
 plan.segments.forEach((seg, i) => {
   const label = seg.label || `segment-${i + 1}`;
   if (!seg.video || !seg.transcript) die(`${label}: video and transcript are required`);
   const video = resolve(planDir, seg.video);
   const tPath = resolve(planDir, seg.transcript);
   if (!existsSync(tPath)) die(`${label}: transcript not found: ${tPath}`);
-  const t = JSON.parse(readFileSync(tPath, 'utf8'));
-  const srcWords = (t.words || [])
-    .filter((w) => (w.type ? w.type === 'word' : true))
-    .map((w) => ({ text: String(w.text ?? w.word ?? '').trim(), start: Number(w.start), end: Number(w.end) }))
-    .filter((w) => w.text && Number.isFinite(w.start) && Number.isFinite(w.end));
-  const duration = Number(t.audio_duration_secs) || (srcWords.length ? srcWords.at(-1).end : 0);
-  const start = seg.start ?? 0;
-  const end = seg.end ?? duration;
+  const { list: srcWords, duration } = loadWords(tPath);
+  let start = seg.start ?? 0;
+  let end = seg.end ?? duration;
   if (!(end > start)) die(`${label}: end (${end}) must be greater than start (${start})`);
+  const snapped = [];
+  if (snapAll && seg.snap !== false && srcWords.length) {
+    // Leave the speaker's natural breath on each side of a join, staying inside the gap.
+    const first = srcWords.find((w) => w.start >= start - 1e-3);
+    if (first) {
+      const prevEnd = srcWords.filter((w) => w.end <= first.start + 1e-3 && w !== first).at(-1)?.end ?? 0;
+      const ns = Math.max(prevEnd, first.start - headPad, 0);
+      if (Math.abs(ns - start) > 0.01) { snapped.push(`start ${r3(start)} -> ${r3(ns)} s`); start = ns; }
+    }
+    const last = [...srcWords].reverse().find((w) => w.end <= end + 1e-3);
+    if (last) {
+      const nextStart = srcWords.find((w) => w.start >= last.end - 1e-3 && w !== last)?.start ?? duration;
+      const ne = Math.min(nextStart, last.end + tailPad, duration || Infinity);
+      if (Math.abs(ne - end) > 0.01) { snapped.push(`end ${r3(end)} -> ${r3(ne)} s`); end = ne; }
+    }
+  }
+  start = onGrid(start);
+  end = Math.min(onGrid(end), duration ? onGrid(Math.floor(duration * (FPS || 1000)) / (FPS || 1000)) : Infinity);
+  if (!(end > start)) die(`${label}: segment is shorter than one frame`);
 
   for (const w of srcWords) {
     const inside = w.start >= start - 1e-3 && w.end <= end + 1e-3;
@@ -79,7 +140,7 @@ plan.segments.forEach((seg, i) => {
   const firstIn = srcWords.filter((w) => w.start >= start - 1e-3 && w.end <= end + 1e-3);
   const after = srcWords.filter((w) => w.start >= end - 1e-3).slice(0, 6).map((w) => w.text).join(' ');
   segOut.push({
-    label, video, start: r3(start), end: r3(end), offset: r3(offset), length: r3(end - start),
+    label, video, start: r3(start), end: r3(end), offset: r3(offset), length: r3(end - start), snapped,
     firstWords: firstIn.slice(0, 8).map((w) => w.text).join(' '),
     lastWords: firstIn.slice(-8).map((w) => w.text).join(' '),
     droppedBefore: before, droppedAfter: after,
@@ -96,40 +157,33 @@ const combined = {
 const transcriptOut = join(outDir, `${stem}.json`);
 writeFileSync(transcriptOut, JSON.stringify(combined, null, 2) + '\n');
 
-const md = [`# Splice review: ${basename(output)}`, '', `Total length: ${r3(offset)} s`, ''];
+const md = [`# Splice review: ${basename(output)}`, '', `Total length: ${r3(offset)} s`,
+  `Natural pause used at joins: ${r3(naturalPause)} s (from the speaker's own sentence gaps)${snapAll ? '' : ' (snapping off)'}`, ''];
 segOut.forEach((s, i) => {
   md.push(`## ${i + 1}. ${s.label} (${basename(s.video)} ${s.start}-${s.end} s, placed at ${s.offset} s)`);
   if (s.droppedBefore) md.push(`- Left out just before: "... ${s.droppedBefore}"`);
   md.push(`- Starts: "${s.firstWords} ..."`);
   md.push(`- Ends: "... ${s.lastWords}"`);
   if (s.droppedAfter) md.push(`- Left out just after: "${s.droppedAfter} ..."`);
+  if (s.snapped.length) md.push(`- Boundaries adjusted to keep a natural breath: ${s.snapped.join(', ')}`);
   md.push('');
 });
 const reviewOut = join(outDir, `${stem}.splice-review.md`);
 
-function probe(file) {
-  const r = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height,r_frame_rate', '-of', 'json', file], { encoding: 'utf8' });
-  if (r.status !== 0) return null;
-  const s = JSON.parse(r.stdout).streams?.[0];
-  if (!s) return null;
-  const [n, d] = s.r_frame_rate.split('/').map(Number);
-  return { width: s.width, height: s.height, fps: d ? n / d : n };
-}
-
 const videos = [...new Set(segOut.map((s) => s.video))];
-const target = existsSync(segOut[0].video) ? probe(segOut[0].video) : null;
 let ffArgs = null;
 if (target) {
   const { width: W, height: H } = target;
-  const fps = Math.round(target.fps * 1000) / 1000;
+  const fps = FPS;
   for (const v of videos.slice(1)) {
     const p = existsSync(v) ? probe(v) : null;
     if (p && p.width * H !== p.height * W) warnings.push(`${basename(v)} is ${p.width}x${p.height}, a different shape from ${W}x${H}; it will be letterboxed. Consider reframing it first.`);
   }
   const graph = segOut.map((s, i) => {
     const k = videos.indexOf(s.video);
-    return `[${k}:v]trim=start=${s.start}:end=${s.end},setpts=PTS-STARTPTS,scale=${W}:${H}:force_original_aspect_ratio=decrease,pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2,fps=${fps},setsar=1[v${i}];` +
-      `[${k}:a]atrim=start=${s.start}:end=${s.end},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo[a${i}]`;
+    return `[${k}:v]fps=${fps},trim=start=${s.start}:end=${s.end},setpts=PTS-STARTPTS,scale=${W}:${H}:force_original_aspect_ratio=decrease,pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2,setsar=1[v${i}];` +
+      `[${k}:a]atrim=start=${s.start}:end=${s.end},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,` +
+      `afade=t=in:st=0:d=${FADE},afade=t=out:st=${r3(Math.max(0, s.length - FADE))}:d=${FADE}[a${i}]`;
   });
   graph.push(`${segOut.map((_, i) => `[v${i}][a${i}]`).join('')}concat=n=${segOut.length}:v=1:a=1[v][a]`);
   const graphPath = join(outDir, `${stem}.splice-filter.txt`);

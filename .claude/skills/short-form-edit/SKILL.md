@@ -44,7 +44,9 @@ this test. Treat the answer as editorial judgment until audience data exists.
    with every boundary in a gap between words. Show the user the generated
    `*.splice-review.md` (order, first and last words of each part, anything left
    out) and wait for approval, then rerun with `--apply`. From here on treat the
-   combined video and its combined transcript as the single source.
+   combined video and its combined transcript as the single source. Plan every
+   join as a visual event (layout change or punch-in), per "Joins between
+   recordings" in broll-quality.md, and mark it in the storyboard.
    Then run the generation-account check in `docs/GENERATION-ACCOUNTS.md`: if a
    Higgsfield connector is connected, ask to use that account; if declined or
    missing, offer Kie.ai or other configured accounts, or no generation.
@@ -75,20 +77,32 @@ this test. Treat the answer as editorial judgment until audience data exists.
    described in [broll-quality.md](references/broll-quality.md). Every inserted
    visual must meet that quality bar: banned generic elements, the mechanism
    instead of a symbol, one focal point, one visual world, depth, and quality motion.
+7. **Storyboard gate.** After the style frames are approved and before any scene
+   is built, write `storyboard.json` (every scene: time range on the edited
+   timeline, layout, the exact spoken words, what is on screen, how it moves,
+   and how it is made) and run `node scripts/storyboard-sheet.mjs storyboard.json --open`.
+   Show the user the resulting `STORYBOARD.html` plus a short scene list in chat,
+   and stop until they approve or name scenes to change. Revise and show it
+   again after changes. Build compositions only from the approved storyboard.
 
 **Cuts versus the voice.** Removing silences and mistakes is editing, not
 changing the voice; do it unless the user says not to cut. Never process the
 speaker's audio: no denoise, EQ, compression, loudness normalization, speed, or
 pitch change, and no color or light change to the speaker footage, unless asked.
+Masking, cropping, moving, and scaling the speaker are design, not alteration;
+use them (see "The speaker is a design element" in broll-quality.md).
 The cut tools join hard; listen to every join, and if one clicks, the only
 allowed fix is a very short fade (about 10-20 ms) at that join. Music and SFX sit
 under the untouched voice track.
 
-User authorization persists. An instruction to make a finished video and iterate
-authorizes ordinary local editing and rendering. An explicit request for generated
-B-roll on the approved account authorizes those generations. Resolve review gates through the current
-authorization; ask only for missing approval, not again at every draft. Never post
-the reel or contact anyone without explicit authorization.
+**Mandatory approval gates.** A general instruction such as "make a reel" does
+NOT approve these; stop and wait at each one: the splice review (when joining
+recordings), the generation account, the style frames, and the storyboard. Skip
+one only when the user explicitly says to skip that gate. Everything else
+(transcription, silence cuts, local rendering, drafts, fixes) proceeds without
+asking again. An explicit request for generated B-roll on the approved account
+authorizes those generations within the approved storyboard. Never post the reel
+or contact anyone without explicit authorization.
 
 ## Design the emotional journey
 
