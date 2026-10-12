@@ -8,15 +8,19 @@ description: Edit a raw talking-head video through transcription, silence trimmi
 Keep each project in `video-projects/<slug>/`, preserving the source recording.
 Read the workspace guide and the project's brief or DESIGN.md. If a direction is
 missing, propose a style from `style-library/registry.json` based on the footage.
+For a reel, YouTube Short, or short ad, use `../short-form-edit/SKILL.md` instead.
+Compose and render only with HyperFrames; never build a separate Puppeteer or
+canvas renderer, even if a prompt names one.
 
 1. Inspect duration, streams, and source resolution with ffprobe. Copy the source
    into the project's assets or reference an explicitly provided local path.
-2. Read `docs/TOOLS-AND-API-KEYS.md` before service setup. Reuse a matching word
-   transcript. Otherwise use the student's chosen provider; the default is
-   `node scripts/transcribe-elevenlabs.mjs <source>`. OpenAI Whisper and local
-   Whisper are supported workflow alternatives after transcript normalization.
-   Check available credentials or local dependencies. Explain uploads and costs
-   before any service call whose authorization is still missing.
+2. Choose the transcription path with "Choose a transcription path" in
+   `docs/TOOLS-AND-API-KEYS.md`: reuse a matching word transcript, else ElevenLabs
+   Scribe (`node scripts/transcribe-elevenlabs.mjs <source> --language <code>`)
+   when its key is set, else local faster-whisper sized to the machine
+   (`python3 scripts/transcribe-faster-whisper.py --check`). Set the spoken
+   language explicitly (`fa` for Persian). Ask before installing anything, and
+   explain uploads and costs before any service call not yet authorized.
    If the edit may use generated images, video, music, or voice, run the
    generation-account check in `docs/GENERATION-ACCOUNTS.md` now: offer the
    connected Higgsfield account first, then Kie.ai or other accounts if declined.
@@ -25,9 +29,15 @@ missing, propose a style from `style-library/registry.json` based on the footage
 4. Read `../cut-mistakes/SKILL.md`. Inspect candidates in context and preserve
    intentional emphasis. Record the reviewed cuts. If no mistakes need cutting,
    carry forward the silence output. Match every transcript to its actual video.
+   Cutting is not changing the voice: never denoise, EQ, compress, normalize, or
+   retime the speaker's audio, or regrade their footage, unless asked. If a hard
+   join clicks, only a 10-20 ms fade at that join is allowed.
 5. Read `../video-storytelling/SKILL.md` for the visual arc and
    `../hyperframes-video-beats/SKILL.md` for overlays. Write a beat sheet with
    transcript anchors, one visual idea per beat, and deliberate callbacks.
+   Every inserted visual must meet `../short-form-edit/references/broll-quality.md`;
+   render the two style frames it describes and get the look approved before the
+   beat sheet is built out.
 6. Read `MOTION_PHILOSOPHY.md`, `../hyperframes/SKILL.md`, and relevant GSAP
    references before authoring. Use `../style-library/SKILL.md` to select or
    adapt a card. Localize every asset used by the composition.

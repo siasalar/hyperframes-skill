@@ -18,6 +18,8 @@ Keep the viewer oriented and engaged. Every beat must answer one of these:
 
 Do not add graphics just because a gap exists. Add graphics because the narration has a topic, transition, proof point, or mental model that benefits from visual support.
 
+Every beat must meet the quality bar in `../short-form-edit/references/broll-quality.md`: no generic stock symbols or slide layouts, show the mechanism, one focal point, one visual world, depth, and quality motion. Render its two style frames and get the look approved before building all beats.
+
 ## First Pass
 
 1. Read project instructions (`AGENTS.md`, local skill docs, and project-specific notes).

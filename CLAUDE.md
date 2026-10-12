@@ -9,6 +9,10 @@ rendering, transcript-driven cuts, and reusable motion graphics.
 Claude Code uses `.claude/skills/`. Codex uses the generated `.agents/skills/`.
 Edit canonical skills in `.claude/skills/`, then run `npm run sync:skills`.
 Use `$edit-video` in Codex, `/edit-video` in Claude Code, or natural language.
+Route without being told: a talking-head recording to a reel, Short, or short ad
+uses `short-form-edit`; a longer edit uses `edit-video`. Compose and render only
+with HyperFrames, never a separate Puppeteer or canvas renderer, even if a prompt
+names one.
 Model and permission choices belong to the user; `.codex/config.toml` only adds
 document loading defaults. Work locally unless the user requests subagents.
 
@@ -62,7 +66,9 @@ Before choosing a transcription, asset-generation, or voiceover service, read
 `docs/TOOLS-AND-API-KEYS.md` and check the user's provider choice and local setup.
 ElevenLabs Scribe is the default; honor requests for OpenAI Whisper, local
 Whisper, or another provider. Normalize verified word timestamps for the cutting
-tools. The included transcription script is ElevenLabs-only. Before planning any
+tools. Pick transcription with "Choose a transcription path" in that guide:
+reuse, ElevenLabs when keyed, else local faster-whisper sized by its `--check`;
+always pass the spoken language, and ask before installing. Before planning any
 generated image, video, music, or voice, follow `docs/GENERATION-ACCOUNTS.md`:
 if a Higgsfield connector is connected, ask to use it; if declined or missing,
 offer Kie.ai or other configured accounts, then no-generation. Kie.ai is optional
@@ -73,6 +79,11 @@ Cut silences first; use its edited video AND retimed transcript for cut-mistakes
 Review each mistake in context. Intentional repetition is not a mistake. Record
 the reviewed decisions before applying them. If no cuts are needed, preserve the
 input or use an empty cuts list. Never mix original timestamps with edited footage.
+Cutting is not altering the voice: never denoise, EQ, compress, normalize, or
+retime the speaker's audio, or regrade their footage, unless asked.
+
+Every inserted visual must meet `.claude/skills/short-form-edit/references/broll-quality.md`;
+approve two style frames before the storyboard.
 
 Load the relevant skills before changing HTML. Root compositions use a visible
 div with id, data-composition-id, data-start, duration, width, and height. Timed

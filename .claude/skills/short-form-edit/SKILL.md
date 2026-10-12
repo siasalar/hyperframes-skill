@@ -25,11 +25,17 @@ this test. Treat the answer as editorial judgment until audience data exists.
 1. Read the scoped workspace guide, `MOTION_PHILOSOPHY.md`, and the HyperFrames
    and video-storytelling skills before composition work. Use the user's brief
    over aesthetic defaults. Keep all artifacts in `video-projects/<slug>/`.
+   Compose and render only with HyperFrames (`npx hyperframes render`). Do not
+   build a separate renderer with Puppeteer, Playwright, or canvas capture, even
+   if a prompt names one: HyperFrames already renders through Chrome. Say so
+   briefly when a prompt asks for another renderer.
 2. Probe the supplied source and reference: duration, dimensions, frame rate,
-   audio, and existing transcript identity. Preserve originals. Transcribe with
-   the student's chosen provider; ElevenLabs Scribe is the default. Read
-   `docs/TOOLS-AND-API-KEYS.md` for Whisper alternatives, word-timestamp
-   normalization, credentials, and service costs. Never substitute an older take.
+   audio, and existing transcript identity. Preserve originals. Choose the
+   transcription path with "Choose a transcription path" in
+   `docs/TOOLS-AND-API-KEYS.md` (reuse, ElevenLabs Scribe, or local
+   faster-whisper sized to the machine with `--check`); set the spoken language
+   explicitly, for example `fa` for Persian. Ask before installing anything.
+   Never substitute an older take.
    Then run the generation-account check in `docs/GENERATION-ACCOUNTS.md`: if a
    Higgsfield connector is connected, ask to use that account; if declined or
    missing, offer Kie.ai or other configured accounts, or no generation.
@@ -53,6 +59,18 @@ this test. Treat the answer as editorial judgment until audience data exists.
    Render the clean cut once and derive word timing from the actual frame-aligned
    EDL. Lock the cut after the rough animatic, before polished graphics. Every later timing change rebuilds dependent
    captions, graphics, and sound from the same map.
+6. Before the storyboard, render two style frames and get the look approved, as
+   described in [broll-quality.md](references/broll-quality.md). Every inserted
+   visual must meet that quality bar: banned generic elements, the mechanism
+   instead of a symbol, one focal point, one visual world, depth, and quality motion.
+
+**Cuts versus the voice.** Removing silences and mistakes is editing, not
+changing the voice; do it unless the user says not to cut. Never process the
+speaker's audio: no denoise, EQ, compression, loudness normalization, speed, or
+pitch change, and no color or light change to the speaker footage, unless asked.
+The cut tools join hard; listen to every join, and if one clicks, the only
+allowed fix is a very short fade (about 10-20 ms) at that join. Music and SFX sit
+under the untouched voice track.
 
 User authorization persists. An instruction to make a finished video and iterate
 authorizes ordinary local editing and rendering. An explicit request for generated

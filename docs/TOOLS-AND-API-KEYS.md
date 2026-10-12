@@ -18,6 +18,7 @@ none, it offers Kie.ai or your other accounts. See
 | HyperFrames and GSAP | Video compositions and animation | Installed by `npm ci`. Rendering runs locally. Some templates use online fonts or CDNs; localize selected assets for final rendering. |
 | ElevenLabs Scribe | Default for speech transcription | Your own key with `speech_to_text` access and available usage. The included helper sends audio to ElevenLabs. |
 | OpenAI Whisper API | Alternative cloud transcription | Your own OpenAI API key and API billing. Ask the assistant to configure the call and normalize its word timestamps. |
+| Local faster-whisper | Free offline transcription on your computer | Python plus `faster-whisper` (installed only with your approval). `scripts/transcribe-faster-whisper.py --check` picks a model that fits your RAM and GPU. |
 | Local Whisper or whisper.cpp | Alternative transcription on your computer | Separate runtime and model installation. No cloud transcription key; needs model downloads, disk space, and local compute. |
 | Higgsfield | Optional generated images, video, and music through its connector; offered first when connected | Your own Higgsfield plan or credits and the Higgsfield connector connected in your assistant. Asked before use. |
 | Kie.ai | Optional generated moving B-roll, images, and other supported assets | Your own account, key, and credits. Existing footage and supplied assets can be used instead. |
@@ -39,6 +40,35 @@ The helper writes word-level JSON beside the input. Reuse a verified transcript
 instead of paying to transcribe the same take again. See the official
 [Scribe API documentation](https://elevenlabs.io/docs/api-reference/speech-to-text/convert)
 for current model options and usage details.
+
+## Choose a transcription path
+
+The assistant picks the first option that applies and tells you which one:
+
+1. **Reuse** a word-level transcript that matches this exact recording.
+2. **ElevenLabs Scribe** when `ELEVENLABS_API_KEY` is set. Most accurate for
+   Persian and other non-English speech; a paid cloud upload.
+   `node scripts/transcribe-elevenlabs.mjs <video> --language fa`
+3. **Local faster-whisper**, free and offline after a one-time model download.
+   First check what the computer can run (no install needed):
+   `python3 scripts/transcribe-faster-whisper.py --check`
+
+   | Machine | Model chosen | Notes |
+   | --- | --- | --- |
+   | NVIDIA GPU | `large-v3` | Best accuracy, fast |
+   | 8 GB RAM or more | `large-v3-turbo` | Near-best accuracy; about 2 GB RAM, 1.6 GB download |
+   | 4-8 GB RAM | `small` | Weak for Persian; prefer a cloud option |
+   | Under 4 GB RAM | `base` | Drafts only; use a cloud option |
+
+   Installing needs your approval: `python3 -m pip install --user faster-whisper`.
+   Then: `python3 scripts/transcribe-faster-whisper.py <video> --language fa`.
+   Override with `--model large-v3` for maximum accuracy on a strong machine.
+4. **OpenAI Whisper API** when `OPENAI_API_KEY` is set (details below).
+
+Always pass the spoken language explicitly (`fa` for Persian, `en` for English);
+auto-detection can mislabel short or mixed-language clips. On a weak machine the
+assistant recommends a cloud option instead of installing a model it cannot run
+well.
 
 ## Whisper and other transcription alternatives
 
