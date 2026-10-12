@@ -86,42 +86,34 @@ or feel the rhythm stumble:
 
 The user should not have to script creative ideas. Read the transcript, infer
 its tone (explainer, story, opinion, tutorial) and its core idea, then invent
-visuals that grow out of what is said.
+visuals that grow out of what is said in this video and nowhere else.
 
 - For the hook and each key idea, write three different visual concepts in the
   storyboard and pick the strongest; say why in one line. Reject any concept that
-  could illustrate a different video.
-- Every reel gets at least one **signature transition** that connects generated
-  footage, graphics, and the real speaker into one continuous move.
-- Build concepts from the content's own objects and actions. Example: a video
-  about recording each video four times could open on a generated camera whose
-  viewfinder shows four real takes side by side (composited), then push in until
-  the real "best take" fills the screen.
+  could illustrate a different video, and any concept you would reach for by habit.
+- Look for one moment where generated footage, graphics, and the real speaker
+  can connect in a single continuous move, when the content offers a strong idea
+  for it. Do not force one.
+- There is no default concept. Never reuse a device just because it exists in
+  this file or worked in another video; each reel's ideas must come from its own
+  words, objects, and actions.
 
 **The speaker's face is never generated.** Every frame that shows the speaker
 comes from their real recording. Generated footage shows only objects, places,
-and hands without the speaker's face; the real video is composited into it in
+and hands without the speaker's face; the real speaker is composited into it in
 HyperFrames. Never pass a frame containing the speaker's face to an image or
 video model as a start, end, or reference image.
 
-Technique vocabulary (pick by meaning, never as a checklist):
+Technical building blocks (tools, not ideas; most reels use few or none of them):
 
-- **Zoom through a frame into the real speaker.** Generate the shot ending on an
-  empty screen: a camera viewfinder, phone, monitor, or window showing plain black
-  or green. In HyperFrames, place the real speaker video inside that screen
-  (masked and perspective-fit), then push the camera in until the real footage
-  fills the frame. The landing is pure compositing, so the face is always real.
-- **Pull out of the real speaker.** The reverse: start full-frame on the real
-  footage, shrink it into a screen or object inside a generated shot, and let
-  the generated scene take over.
-- **End-frame and start-frame control without the face.** To make a generated
-  shot finish or begin on an exact composition, give the model a frame that
-  shows only the empty screen, object, or set (`end_image` / `start_image` on
-  `kling3_0` or `seedance_2_0`), never the speaker.
-- **Match cut** on shape, motion direction, or color between generated footage,
-  graphics, and the speaker.
-- **Object carry-over:** an object from a generated shot becomes the graphic in
-  the next scene, or the speaker card becomes an object in the generated scene.
+- **Compositing the real speaker into a generated shot:** place the real video
+  on any surface or shape in the shot, masked and perspective-fit, then move the
+  camera to or away from it.
+- **End-frame and start-frame control:** give `kling3_0` or `seedance_2_0` an
+  `end_image` / `start_image` that shows only objects or the set, never the
+  speaker, so a generated shot starts or ends on an exact composition.
+- **Match cut** on shape, motion direction, or color.
+- **Object carry-over** from one scene into the next.
 
 Conform generated 24 fps clips to the edit's frame rate and check every
 transition frame by frame: the speaker's face must only ever be real footage.
