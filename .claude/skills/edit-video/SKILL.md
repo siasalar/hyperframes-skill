@@ -48,7 +48,9 @@ canvas renderer, even if a prompt names one.
    beat sheet is built out.
    Then show the beat sheet as a visual storyboard
    (`node scripts/storyboard-sheet.mjs storyboard.json --open`) and wait for the
-   user's approval before building any composition. A general "edit this video"
+   user's approval before building any composition; then record it with
+   `node scripts/approve-storyboard.mjs video-projects/<slug>`. Style frames live in
+   `video-projects/<slug>/style-frames/`. A general "edit this video"
    instruction does not approve the style frames or the storyboard.
 6. Read `MOTION_PHILOSOPHY.md`, `../hyperframes/SKILL.md`, and relevant GSAP
    references before authoring. Use `../style-library/SKILL.md` to select or

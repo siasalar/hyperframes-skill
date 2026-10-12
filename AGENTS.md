@@ -92,7 +92,9 @@ retime the speaker's audio, or regrade their footage, unless asked.
 Every inserted visual must meet `.claude/skills/short-form-edit/references/broll-quality.md`.
 Always stop for approval of two style frames, then of a visual storyboard
 (`scripts/storyboard-sheet.mjs`), before building scenes; "make a reel" alone
-does not approve them.
+does not approve them. After approval run `scripts/approve-storyboard.mjs`; a
+project hook (`.claude/settings.json`) blocks scenes, renders, and paid video
+generation until then. Style frames go in `video-projects/<slug>/style-frames/`.
 
 Load the relevant skills before changing HTML. Root compositions use a visible
 div with id, data-composition-id, data-start, duration, width, and height. Timed

@@ -74,7 +74,9 @@ this test. Treat the answer as editorial judgment until audience data exists.
    EDL. Lock the cut after the rough animatic, before polished graphics. Every later timing change rebuilds dependent
    captions, graphics, and sound from the same map.
 6. Before the storyboard, render two style frames and get the look approved, as
-   described in [broll-quality.md](references/broll-quality.md). Every inserted
+   described in [broll-quality.md](references/broll-quality.md). Build them in
+   `video-projects/<slug>/style-frames/` (its own small HyperFrames composition),
+   never in the project's `compositions/` or root `index.html`. Every inserted
    visual must meet that quality bar: banned generic elements, the mechanism
    instead of a symbol, one focal point, one visual world, depth, and quality motion.
 7. **Storyboard gate.** After the style frames are approved and before any scene
@@ -83,7 +85,12 @@ this test. Treat the answer as editorial judgment until audience data exists.
    and how it is made) and run `node scripts/storyboard-sheet.mjs storyboard.json --open`.
    Show the user the resulting `STORYBOARD.html` plus a short scene list in chat,
    and stop until they approve or name scenes to change. Revise and show it
-   again after changes. Build compositions only from the approved storyboard.
+   again after changes. When the user approves, run
+   `node scripts/approve-storyboard.mjs video-projects/<slug>` (the user confirms
+   it). A project hook blocks writing `compositions/`, the root `index.html`,
+   final renders, and paid video generation until that approval exists, and again
+   if `storyboard.json` changes afterwards. Build compositions only from the
+   approved storyboard. Save `storyboard.json` in the project folder.
 
 **Cuts versus the voice.** Removing silences and mistakes is editing, not
 changing the voice; do it unless the user says not to cut. Never process the
