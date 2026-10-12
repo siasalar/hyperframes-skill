@@ -5,7 +5,8 @@ description: Turn talking-head footage into a finished reel, YouTube Short, or s
 
 # Short form edit
 
-Input: a source-video path and an optional reference-reel path.
+Input: one or more source-video paths and an optional reference-reel path.
+Without stated format, deliver an Instagram Reel: 9:16, 1080x1920, MP4.
 
 Deliver the requested formats and the editable project. Default to 1080x1920;
 when requested, also compose 1920x1080 with its own framing and text placement.
@@ -36,6 +37,14 @@ this test. Treat the answer as editorial judgment until audience data exists.
    faster-whisper sized to the machine with `--check`); set the spoken language
    explicitly, for example `fa` for Persian. Ask before installing anything.
    Never substitute an older take.
+   **Two or more main recordings.** Transcribe each one separately. Place them as
+   the user says; if they give no placement, put the second recording right
+   before the first recording's hook (its opening promise line). Write a splice
+   plan and run `node scripts/splice-sources.mjs <plan.json> --out-dir <dir>`,
+   with every boundary in a gap between words. Show the user the generated
+   `*.splice-review.md` (order, first and last words of each part, anything left
+   out) and wait for approval, then rerun with `--apply`. From here on treat the
+   combined video and its combined transcript as the single source.
    Then run the generation-account check in `docs/GENERATION-ACCOUNTS.md`: if a
    Higgsfield connector is connected, ask to use that account; if declined or
    missing, offer Kie.ai or other configured accounts, or no generation.

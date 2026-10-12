@@ -61,3 +61,20 @@ test('beat validator accepts reordered attributes and enforces early and late li
     assert.equal(JSON.parse(result.stdout).rows.length, 1);
   }
 });
+
+test('splicing two sources offsets the second transcript and reports joins', () => {
+  const out = scratch();
+  const plan = join(out, 'plan.json');
+  writeFileSync(plan, JSON.stringify({ output: 'combined.mp4', segments: [
+    { label: 'intro', video: 'missing-a.mp4', transcript: fixture, start: 0, end: 1.0 },
+    { label: 'insert', video: 'missing-b.mp4', transcript: fixture, start: 2.0, end: 4.0 },
+  ] }));
+  const result = run('scripts/splice-sources.mjs', [plan, '--out-dir', out]);
+  assert.equal(result.status, 0, result.stderr);
+  const doc = JSON.parse(readFileSync(join(out, 'combined.json')));
+  assert.equal(doc.audio_duration_secs, 3);
+  assert.equal(doc.segments[1].offset, 1);
+  assert.ok(doc.words.every((w, i) => w.end > w.start && (!i || w.start >= doc.words[i-1].start)));
+  assert.ok(doc.words.every(w => w.end <= 3 + 1e-6));
+  assert.match(readFileSync(join(out, 'combined.splice-review.md'), 'utf8'), /placed at 1 s/);
+});

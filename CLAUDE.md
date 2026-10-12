@@ -10,9 +10,12 @@ Claude Code uses `.claude/skills/`. Codex uses the generated `.agents/skills/`.
 Edit canonical skills in `.claude/skills/`, then run `npm run sync:skills`.
 Use `$edit-video` in Codex, `/edit-video` in Claude Code, or natural language.
 Route without being told: a talking-head recording to a reel, Short, or short ad
-uses `short-form-edit`; a longer edit uses `edit-video`. Compose and render only
-with HyperFrames, never a separate Puppeteer or canvas renderer, even if a prompt
-names one.
+uses `short-form-edit`; a longer edit uses `edit-video`. When the format is not
+stated, the default deliverable is an Instagram Reel: 9:16, 1080x1920, MP4. Two
+or more main recordings are joined first with `scripts/splice-sources.mjs`
+(default: the second goes right before the first one's hook), after approval.
+Compose and render only with HyperFrames, never a separate Puppeteer or canvas
+renderer, even if a prompt names one.
 Model and permission choices belong to the user; `.codex/config.toml` only adds
 document loading defaults. Work locally unless the user requests subagents.
 

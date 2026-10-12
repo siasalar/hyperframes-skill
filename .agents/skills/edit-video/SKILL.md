@@ -28,6 +28,10 @@ canvas renderer, even if a prompt names one.
    If the edit may use generated images, video, music, or voice, run the
    generation-account check in `docs/GENERATION-ACCOUNTS.md` now: offer the
    connected Higgsfield account first, then Kie.ai or other accounts if declined.
+   With two or more main recordings, transcribe each, then join them with
+   `node scripts/splice-sources.mjs` as described in `../short-form-edit/SKILL.md`
+   (default: the second recording goes right before the first one's hook), get
+   the splice review approved, and continue with the combined video and transcript.
 3. Read `../cut-silences/SKILL.md`. Produce an EDL and a retimed transcript, and
    render the silence pass when editing is authorized.
 4. Read `../cut-mistakes/SKILL.md`. Inspect candidates in context and preserve
