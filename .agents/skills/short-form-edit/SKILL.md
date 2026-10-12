@@ -30,6 +30,9 @@ this test. Treat the answer as editorial judgment until audience data exists.
    the student's chosen provider; ElevenLabs Scribe is the default. Read
    `docs/TOOLS-AND-API-KEYS.md` for Whisper alternatives, word-timestamp
    normalization, credentials, and service costs. Never substitute an older take.
+   Then run the generation-account check in `docs/GENERATION-ACCOUNTS.md`: if a
+   Higgsfield connector is connected, ask to use that account; if declined or
+   missing, offer Kie.ai or other configured accounts, or no generation.
 3. When a reference is supplied, inspect the entire reel using contact sheets,
    individual full-size frames, and contiguous frame strips at representative
    transitions. Review its sound when an audio-capable review surface is available.
@@ -52,8 +55,8 @@ this test. Treat the answer as editorial judgment until audience data exists.
    captions, graphics, and sound from the same map.
 
 User authorization persists. An instruction to make a finished video and iterate
-authorizes ordinary local editing and rendering. An explicit request for Kie
-B-roll authorizes those generations. Resolve review gates through the current
+authorizes ordinary local editing and rendering. An explicit request for generated
+B-roll on the approved account authorizes those generations. Resolve review gates through the current
 authorization; ask only for missing approval, not again at every draft. Never post
 the reel or contact anyone without explicit authorization.
 
@@ -234,9 +237,11 @@ human reactions where they support the story.
 
 ## Generate and assemble
 
-1. Kie.ai is the optional provider for generated moving inserts and images.
-   Use the student's chosen provider or supplied assets; check its account, credits,
-   and integration before generating. See `docs/TOOLS-AND-API-KEYS.md`. Verify the
+1. Generate only on the account approved in the generation-account check
+   (`docs/GENERATION-ACCOUNTS.md`): Higgsfield when connected and approved,
+   otherwise Kie.ai or another configured provider, or supplied assets. Check its
+   credits and integration before generating; preflight Higgsfield costs with
+   `get_cost: true`. See `docs/TOOLS-AND-API-KEYS.md`. Verify the
    current official API schema. Save model, prompt, task ID, selected output,
    and generation state; reuse successful jobs rather than resubmitting blindly.
    Download and inspect real video files, including full-size corners throughout

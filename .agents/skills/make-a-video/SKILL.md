@@ -58,6 +58,8 @@ Full question bank: `Read: references/interview-questions.md`
 
 **Before asking the user anything, inventory existing assets.** Check `<workspace-root>/assets/` and any project `assets/` folder. Don't ask for what's already there.
 
+**Generation account.** If the video may need generated images, video, music, or voice, run the check in `docs/GENERATION-ACCOUNTS.md` during this gate: if a Higgsfield connector is connected, ask "I'll use your connected Higgsfield account for generated assets, do you approve?"; if declined or missing, offer Kie.ai or other configured accounts, or no generation. Record the answer in `BRIEF.md`.
+
 Then ask progressively — they don't need answers to all of these:
 
 1. Style guide or brand doc? (paste/path · no)

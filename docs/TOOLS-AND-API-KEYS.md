@@ -4,6 +4,11 @@ This kit uses **ElevenLabs Scribe for transcription** and **Kie.ai for generated
 and image assets** by default. These are preferred services, not requirements for every
 edit. Bring your own accounts and credits, and configure only what you use.
 
+For generated images, video, music, and voice the assistant first checks for a
+connected **Higgsfield** account and asks before using it; if you decline or have
+none, it offers Kie.ai or your other accounts. See
+[Choose the generation account first](GENERATION-ACCOUNTS.md).
+
 ## What you need
 
 | Tool or service | When you need it | Setup and cost |
@@ -14,6 +19,7 @@ edit. Bring your own accounts and credits, and configure only what you use.
 | ElevenLabs Scribe | Default for speech transcription | Your own key with `speech_to_text` access and available usage. The included helper sends audio to ElevenLabs. |
 | OpenAI Whisper API | Alternative cloud transcription | Your own OpenAI API key and API billing. Ask the assistant to configure the call and normalize its word timestamps. |
 | Local Whisper or whisper.cpp | Alternative transcription on your computer | Separate runtime and model installation. No cloud transcription key; needs model downloads, disk space, and local compute. |
+| Higgsfield | Optional generated images, video, and music through its connector; offered first when connected | Your own Higgsfield plan or credits and the Higgsfield connector connected in your assistant. Asked before use. |
 | Kie.ai | Optional generated moving B-roll, images, and other supported assets | Your own account, key, and credits. Existing footage and supplied assets can be used instead. |
 | Your footage, logos, fonts, music, and sound effects | Building the actual edit | Supply assets you can use. The kit does not include a stock-media or music subscription. |
 

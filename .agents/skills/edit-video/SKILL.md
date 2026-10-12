@@ -17,6 +17,9 @@ missing, propose a style from `style-library/registry.json` based on the footage
    Whisper are supported workflow alternatives after transcript normalization.
    Check available credentials or local dependencies. Explain uploads and costs
    before any service call whose authorization is still missing.
+   If the edit may use generated images, video, music, or voice, run the
+   generation-account check in `docs/GENERATION-ACCOUNTS.md` now: offer the
+   connected Higgsfield account first, then Kie.ai or other accounts if declined.
 3. Read `../cut-silences/SKILL.md`. Produce an EDL and a retimed transcript, and
    render the silence pass when editing is authorized.
 4. Read `../cut-mistakes/SKILL.md`. Inspect candidates in context and preserve

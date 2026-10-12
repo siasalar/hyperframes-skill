@@ -77,6 +77,11 @@ and objects, and 3-5 verified facts with dates for kinetic type. Gather real
 imagery the user owns or can use. Pick the motif and the held-back climax color.
 Only use brand marks the user has the right to use for the intended purpose.
 
+At intake, run the generation-account check in `docs/GENERATION-ACCOUNTS.md`:
+if a Higgsfield connector is connected, ask to use that account for the hero
+still, camera move, and music; if declined or missing, offer Kie.ai (`kie.mjs`)
+or other configured accounts, or the user's own assets. Record it in `BRAND.md`.
+
 ### 3. Chapter map: `STORYBOARD.md`
 
 Create the project with `npm run new-video -- my-reel`, then fill in
@@ -91,7 +96,8 @@ out-transform, the value (dark/paper/accent), and the SFX. Before building:
 ### 4. Music and the beat grid
 
 Read `docs/TOOLS-AND-API-KEYS.md` first. Music can be the user's own licensed track
-or generated. Generation is a paid call, so confirm before running it:
+or generated on the approved account (Higgsfield `generate_audio` with a music
+model, or Kie.ai below). Generation is a paid call, so confirm before running it:
 
 ```sh
 node .claude/skills/motion-showreel/scripts/kie.mjs music --title "Reel" --style "punchy electronic showreel, instrumental, 128 bpm, starts instantly, riser into a big drop" --out video-projects/my-reel/assets/audio
@@ -131,10 +137,16 @@ and -1.2 dBTP.
 
 ### 6. Assets
 
-- **Hero lookdev object.** Run `kie.mjs image --ref <logo.png>` (Seedream
-  image-to-image keeps the silhouette), then `kie.mjs video --image <still>` for a
-  5s Kling camera move. Both are paid calls. Kling returns 24fps: speed it up and
-  re-encode at 60fps all-intra (the command is in the header of `kie.mjs`).
+- **Hero lookdev object.** Use the approved generation account.
+  - Higgsfield: upload the logo (`media_upload`), then `generate_image` with a
+    Seedream or Nano Banana model and the logo as reference, then
+    `generate_video` with `kling3_0` and the still as `start_image` (5s). Preflight
+    both with `get_cost: true`.
+  - Kie.ai: `kie.mjs image --ref <logo.png>` (Seedream image-to-image keeps the
+    silhouette), then `kie.mjs video --image <still>` for a 5s Kling camera move.
+
+  Both are paid calls. Kling returns 24fps: speed it up and re-encode at 60fps
+  all-intra (the command is in the header of `kie.mjs`).
 - **Fonts.** Download them into the project's `assets/fonts/` and use `@font-face`.
   Never rely on system fonts.
 
